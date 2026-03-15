@@ -1,6 +1,7 @@
 import os
 import subprocess
 import traceback
+from datetime import datetime
 
 import gdown
 import psycopg2
@@ -33,6 +34,7 @@ def _create_db(user, pwd, db, db_port):
 
 
 def _export_data_to_db(user, target_db, dump_dir, jobs=4):
+    start = datetime.now()
     print("## yellow_trips-taulun skeema ##")
     subprocess.run(["pg_restore", "-U", user, "-d", target_db, "--section=pre-data", dump_dir], env=env, check=True)
 
@@ -47,7 +49,9 @@ def _export_data_to_db(user, target_db, dump_dir, jobs=4):
                    env=env,
                    check=True)
 
-    print("## valmista ##")
+    end = datetime.now()
+
+    print(f"## valmista! Aikaa kului {end - start} ##")
 
 
 def _download_from_google_drive(destination, folder_id):
