@@ -206,7 +206,7 @@ def _populate_zones():
 def run():
     while True:
         _choice = input(
-            "Mitä haluat tehdä (0: lopeta, 1: luo tietokanta, 2: lataa valmis datapaketti Google Drivesta, 3: vie data tietokantaan): ")
+            "Mitä haluat tehdä (\n0: lopeta, \n1: luo tietokanta, \n2: lataa valmis datapaketti Google Drivesta, \n3: vendorit, \n4: payment_typet, \n5: borought, \n6: service_zonet, \n7: rate_codet, \n8: zonet, \n9: yellow_trips): ")
 
         if _choice == '0':
             break
