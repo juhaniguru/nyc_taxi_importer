@@ -203,10 +203,25 @@ def _populate_zones():
                 traceback.print_exc()
 
 
+def _reset_sequences():
+    with psycopg2.connect(dbname=DST_DB, user=DST_USER, password=DST_PWD) as conn:
+        with conn.cursor() as cur:
+            tables = {'boroughs': 'id', 'payment_types': 'id', 'rate_codes': 'RatecodeID', 'service_zones': 'id', 'vendors': 'VendorID', 'yellow_trips': 'id', 'zones': 'LocationID' }
+            try:
+                for table_name, pk_column in tables.items():
+                    query = f'SELECT setval(pg_get_serial_sequence(\'{table_name}\', \'{pk_column}\'), MAX("{pk_column}")) FROM {table_name};'
+                    cur.execute(query)
+                conn.commit()
+            except Exception as e:
+                conn.rollback()
+                traceback.print_exc()
+
+
+
 def run():
     while True:
         _choice = input(
-            "Mitä haluat tehdä (\n0: lopeta, \n1: luo tietokanta, \n2: lataa valmis datapaketti Google Drivesta, \n3: vendorit, \n4: payment_typet, \n5: borought, \n6: service_zonet, \n7: rate_codet, \n8: zonet, \n9: yellow_trips): ")
+            "Mitä haluat tehdä (\n0: lopeta, \n1: luo tietokanta, \n2: lataa valmis datapaketti Google Drivesta, \n3: vendorit, \n4: payment_typet, \n5: borought, \n6: service_zonet, \n7: rate_codet, \n8: zonet, \n9: yellow_trips, \n10: aseta oikeat auto incrementtien arvot): ")
 
         if _choice == '0':
             break
@@ -251,6 +266,9 @@ def run():
                         conn.rollback()
                         traceback.print_exc()
             _export_data_to_db(user, target_db, dump_dir)
+        elif _choice == '10':
+            _reset_sequences()
+
 
 
 if __name__ == '__main__':
