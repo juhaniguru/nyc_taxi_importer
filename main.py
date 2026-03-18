@@ -266,6 +266,7 @@ def run():
                         conn.rollback()
                         traceback.print_exc()
             _export_data_to_db(user, target_db, dump_dir)
+            _reset_sequences()
         elif _choice == '10':
             _reset_sequences()
 
